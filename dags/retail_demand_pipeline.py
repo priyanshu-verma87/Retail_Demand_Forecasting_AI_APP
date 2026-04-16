@@ -31,19 +31,5 @@ with DAG(
         bash_command="python /opt/airflow/scripts/preprocess.py"
     )
 
-    train = BashOperator(
-        task_id="train_model",
-        bash_command="python /opt/airflow/scripts/train.py"
-    )
-
-    evaluate = BashOperator(
-        task_id="evaluate_model",
-        bash_command="python /opt/airflow/scripts/evaluate.py"
-    )
-
-    predict = BashOperator(
-        task_id="predict_test",
-        bash_command="python /opt/airflow/scripts/predict.py"
-    )
 
     validate >> preprocess 
