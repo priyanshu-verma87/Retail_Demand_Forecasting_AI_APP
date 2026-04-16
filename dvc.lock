@@ -1,0 +1,66 @@
+schema: '2.0'
+stages:
+  train:
+    cmd: python scripts/train.py
+    deps:
+    - path: data/features/train_features.csv
+      hash: md5
+      md5: a4d98758fb830c7d073cb98a9f2b2221
+      size: 144774568
+    - path: scripts/train.py
+      hash: md5
+      md5: 8c8e7c627b0dc0a0377dc91371f9fad3
+      size: 7027
+    outs:
+    - path: reports/model_comparison.csv
+      hash: md5
+      md5: 8405ad8064b820b55ba0638e7beca108
+      size: 351
+  predict:
+    cmd: python scripts/predict.py
+    deps:
+    - path: data/features/test_features.csv
+      hash: md5
+      md5: cdfcdd2a5d1cea4ca746390534492220
+      size: 6001753
+    - path: reports/model_comparison.csv
+      hash: md5
+      md5: 8405ad8064b820b55ba0638e7beca108
+      size: 351
+    - path: scripts/predict.py
+      hash: md5
+      md5: f6b9f0d7529586813019c6625149692b
+      size: 2080
+    outs:
+    - path: reports/predictions.csv
+      hash: md5
+      md5: 5e311060b6a7add6a226a59aa84d4482
+      size: 1225773
+  evaluate:
+    cmd: python scripts/evaluate.py
+    deps:
+    - path: reports/best_model_summary.json
+      hash: md5
+      md5: 62adafd10b52e9be0eb4390dd04ad3c9
+      size: 84
+    - path: reports/model_comparison.csv
+      hash: md5
+      md5: 8405ad8064b820b55ba0638e7beca108
+      size: 351
+    - path: scripts/evaluate.py
+      hash: md5
+      md5: be796f677968e3e6fa3f0b84aff60359
+      size: 2957
+    outs:
+    - path: reports/evaluation_report.txt
+      hash: md5
+      md5: 02397340994b78d5dd08d9fb182bf306
+      size: 469
+    - path: reports/final_metrics.json
+      hash: md5
+      md5: 6cf6f021e363fbad26e51b1f041ad411
+      size: 203
+    - path: reports/model_rmse_comparison.png
+      hash: md5
+      md5: 8958d965792a8fb4f3afc848d8cbc1bb
+      size: 37234

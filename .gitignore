@@ -13,3 +13,4 @@ data/processed/
 data/features/
 data/outputs/
 models/
+/mlruns

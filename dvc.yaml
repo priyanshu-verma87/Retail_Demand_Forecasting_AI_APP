@@ -1,0 +1,28 @@
+stages:
+  train:
+    cmd: python scripts/train.py
+    deps:
+      - scripts/train.py
+      - data/features/train_features.csv
+    metrics:
+      - reports/model_comparison.csv
+
+  predict:
+    cmd: python scripts/predict.py
+    deps:
+      - scripts/predict.py
+      - data/features/test_features.csv
+      - reports/model_comparison.csv
+    outs:
+      - reports/predictions.csv
+
+  evaluate:
+    cmd: python scripts/evaluate.py
+    deps:
+      - scripts/evaluate.py
+      - reports/model_comparison.csv
+      - reports/best_model_summary.json
+    outs:
+      - reports/final_metrics.json
+      - reports/evaluation_report.txt
+      - reports/model_rmse_comparison.png
