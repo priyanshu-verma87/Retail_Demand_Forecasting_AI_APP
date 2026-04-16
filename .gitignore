@@ -10,7 +10,6 @@ mlruns/
 .DS_Store
 Thumbs.db
 data/processed/
-data/features/
 data/outputs/
 models/
 /mlruns
