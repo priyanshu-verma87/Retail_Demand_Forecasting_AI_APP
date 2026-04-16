@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+logs/
+*.log
+.env
+venv/
+.idea/
+.vscode/
+mlruns/
+.DS_Store
+Thumbs.db
+data/processed/
+data/features/
+data/outputs/
+models/
