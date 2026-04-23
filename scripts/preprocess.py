@@ -149,23 +149,4 @@ test_features.to_csv(
 )
 
 logging.info("Feature datasets saved.")
-
-
-# Drift Baseline Stats
-stats = {
-    "sales_mean": float(train["sales"].mean()),
-    "sales_std": float(train["sales"].std()),
-    "sales_min": float(train["sales"].min()),
-    "sales_max": float(train["sales"].max()),
-    "sales_median": float(train["sales"].median())
-}
-
-with open(
-    f"{PROCESSED_PATH}/baseline_stats.json",
-    "w"
-) as f:
-    json.dump(stats, f, indent=4)
-
-logging.info("Baseline statistics saved.")
-
 logging.info("Preprocessing completed successfully.")
