@@ -7,15 +7,42 @@ stages:
       hash: md5
       md5: a4d98758fb830c7d073cb98a9f2b2221
       size: 144774568
+    - path: params.yaml
+      hash: md5
+      md5: 6282d0dfd1dff98dfe3710031dd86cfb
+      size: 681
     - path: scripts/train.py
       hash: md5
-      md5: 8c8e7c627b0dc0a0377dc91371f9fad3
-      size: 7027
+      md5: eeb9ffd20abdf118f803e1bc3a9e2e2f
+      size: 7649
+    params:
+      params.yaml:
+        general.random_state: 42
+        mlflow.experiment_name: retail-demand-forecasting
+        models.linear_regression: true
+        models.random_forest:
+          enabled: true
+          n_estimators: 150
+          max_depth: 14
+          n_jobs: -1
+        models.xgboost:
+          enabled: true
+          n_estimators: 200
+          learning_rate: 0.05
+          max_depth: 12
+          subsample: 0.8
+          colsample_bytree: 0.8
+          n_jobs: -1
+        split.validation_ratio: 0.2
     outs:
+    - path: reports/best_model_summary.json
+      hash: md5
+      md5: 7bde17866c48f11d69cbc83ec47cc7cc
+      size: 136
     - path: reports/model_comparison.csv
       hash: md5
-      md5: 8405ad8064b820b55ba0638e7beca108
-      size: 351
+      md5: 4b8669244afd7cdad634b2daa225dfc6
+      size: 355
   predict:
     cmd: python scripts/predict.py
     deps:
@@ -23,10 +50,14 @@ stages:
       hash: md5
       md5: cdfcdd2a5d1cea4ca746390534492220
       size: 6001753
+    - path: params.yaml
+      hash: md5
+      md5: 6282d0dfd1dff98dfe3710031dd86cfb
+      size: 681
     - path: reports/model_comparison.csv
       hash: md5
-      md5: 8405ad8064b820b55ba0638e7beca108
-      size: 351
+      md5: 4b8669244afd7cdad634b2daa225dfc6
+      size: 355
     - path: scripts/predict.py
       hash: md5
       md5: f6b9f0d7529586813019c6625149692b
@@ -34,19 +65,23 @@ stages:
     outs:
     - path: reports/predictions.csv
       hash: md5
-      md5: 5e311060b6a7add6a226a59aa84d4482
-      size: 1225773
+      md5: d9ae7aa5ad1bdba5ac9ce68cfa86b7ba
+      size: 1225576
   evaluate:
     cmd: python scripts/evaluate.py
     deps:
+    - path: params.yaml
+      hash: md5
+      md5: 6282d0dfd1dff98dfe3710031dd86cfb
+      size: 681
     - path: reports/best_model_summary.json
       hash: md5
-      md5: 62adafd10b52e9be0eb4390dd04ad3c9
-      size: 84
+      md5: 7bde17866c48f11d69cbc83ec47cc7cc
+      size: 136
     - path: reports/model_comparison.csv
       hash: md5
-      md5: 8405ad8064b820b55ba0638e7beca108
-      size: 351
+      md5: 4b8669244afd7cdad634b2daa225dfc6
+      size: 355
     - path: scripts/evaluate.py
       hash: md5
       md5: be796f677968e3e6fa3f0b84aff60359
@@ -54,13 +89,13 @@ stages:
     outs:
     - path: reports/evaluation_report.txt
       hash: md5
-      md5: 02397340994b78d5dd08d9fb182bf306
+      md5: 0158844448c2b556140e307afbe5e3c5
       size: 469
     - path: reports/final_metrics.json
       hash: md5
-      md5: 6cf6f021e363fbad26e51b1f041ad411
-      size: 203
+      md5: 82e5c2c8a836641ac2b9cb6562c0facc
+      size: 204
     - path: reports/model_rmse_comparison.png
       hash: md5
-      md5: 8958d965792a8fb4f3afc848d8cbc1bb
-      size: 37234
+      md5: 8bad084dbf3e96f6bb83611218b275e7
+      size: 37232

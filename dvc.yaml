@@ -4,8 +4,18 @@ stages:
     deps:
       - scripts/train.py
       - data/features/train_features.csv
+      - params.yaml
+    params:
+      - split.validation_ratio
+      - general.random_state
+      - models.random_forest
+      - models.xgboost
+      - models.linear_regression
+      - mlflow.experiment_name
     metrics:
       - reports/model_comparison.csv
+    outs:
+      - reports/best_model_summary.json
 
   predict:
     cmd: python scripts/predict.py
@@ -13,6 +23,7 @@ stages:
       - scripts/predict.py
       - data/features/test_features.csv
       - reports/model_comparison.csv
+      - params.yaml
     outs:
       - reports/predictions.csv
 
@@ -22,6 +33,7 @@ stages:
       - scripts/evaluate.py
       - reports/model_comparison.csv
       - reports/best_model_summary.json
+      - params.yaml
     outs:
       - reports/final_metrics.json
       - reports/evaluation_report.txt
