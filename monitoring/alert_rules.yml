@@ -1,0 +1,29 @@
+groups:
+  - name: retail_alerts
+    rules:
+      - alert: HighAPIErrorRate
+        expr: increase(api_errors_total[5m]) > 0
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: API errors detected
+          description: API errors occurred in last 5 minutes.
+
+      - alert: HighLatency
+        expr: rate(api_latency_seconds_sum[5m]) / rate(api_latency_seconds_count[5m]) * 1000 > 500
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: High latency
+          description: Average latency exceeded 500 ms.
+
+      - alert: APIServiceDown
+        expr: up{job="api"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: API service down
+          description: Prometheus cannot scrape API.

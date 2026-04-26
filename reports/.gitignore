@@ -4,3 +4,9 @@
 /evaluation_report.txt
 /model_rmse_comparison.png
 /best_model_summary.json
+.pytest_cache/
+logs/
+.env
+reports/predictions.db
+mlflow.db
+__pycache__/

@@ -1,5 +1,7 @@
 __pycache__/
 *.pyc
+*.py[cod]
+*$py.class
 logs/
 *.log
 .env
@@ -9,7 +11,10 @@ venv/
 mlruns/
 .DS_Store
 Thumbs.db
+data/raw/
 data/processed/
 data/outputs/
 models/
 /mlruns
+mlflow.db
+reports/predictions.db
