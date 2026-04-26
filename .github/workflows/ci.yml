@@ -28,7 +28,9 @@ jobs:
 
       # 4. Pull DVC data
       - name: DVC Pull
-        run: python -m dvc pull
+        run: |
+          python -m dvc pull
+          dir data\raw
 
       # 5. Run Unit Tests
       - name: Run Unit Tests
