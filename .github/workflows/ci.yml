@@ -82,20 +82,21 @@ jobs:
 
           while ($attempt -lt $maxAttempts) {
 
-            $state = docker exec $container airflow dags state retail_demand_pipeline (Get-Date -Format yyyy-MM-dd) 2>$null
+            $output = docker exec $container airflow dags list-runs -d retail_demand_pipeline --no-backfill 2>$null
 
-            Write-Host "Current DAG state: $state"
+            Write-Host $output
 
-            if ($state -match "success") {
+            if ($output -match "success") {
               Write-Host "DAG completed successfully."
               exit 0
             }
 
-            if ($state -match "failed") {
+            if ($output -match "failed") {
               Write-Error "DAG failed."
               exit 1
             }
 
+            Write-Host "Waiting for DAG completion..."
             Start-Sleep -Seconds 15
             $attempt++
           }
