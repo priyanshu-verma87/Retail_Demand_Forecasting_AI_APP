@@ -97,7 +97,7 @@ jobs:
             }
 
             Write-Host "Waiting for DAG completion..."
-            Start-Sleep -Seconds 15
+            Start-Sleep -Seconds 30
             $attempt++
           }
 
