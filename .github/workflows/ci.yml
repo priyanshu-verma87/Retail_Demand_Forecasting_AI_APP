@@ -63,17 +63,27 @@ jobs:
 
       # 8. Trigger DAG
       - name: Trigger Retail Demand DAG
+        shell: powershell
         run: |
-          docker exec airflow-project-airflow-webserver-1 airflow dags trigger retail_demand_pipeline
+          $container = docker ps --filter "name=airflow-webserver" --format "{{.Names}}"
+
+          Write-Host "Using container: $container"
+
+          docker exec $container airflow dags trigger retail_demand_pipeline
 
       # 9. Wait for DAG Completion (replaces blind timeout)
       - name: Wait for DAG Run
         shell: powershell
         run: |
+          $container = docker ps --filter "name=airflow-webserver" --format "{{.Names}}"
+
           $maxAttempts = 40
           $attempt = 0
+
           while ($attempt -lt $maxAttempts) {
-            $state = docker exec airflow-project-airflow-webserver-1 airflow dags state retail_demand_pipeline (Get-Date -Format yyyy-MM-dd) 2>$null
+
+            $state = docker exec $container airflow dags state retail_demand_pipeline (Get-Date -Format yyyy-MM-dd) 2>$null
+
             Write-Host "Current DAG state: $state"
 
             if ($state -match "success") {
@@ -96,7 +106,7 @@ jobs:
       # 10. Run DVC Training
       - name: Run Training Pipeline
         run: |
-          dvc repro
+          python -m dvc repro
 
       # 11. Build Deployment Images
       - name: Build Deployment Stack
@@ -132,7 +142,7 @@ jobs:
       # 14. Run Integration Tests
       - name: Run Integration Tests
         run: |
-          pytest tests/test_integration.py -v
+          python -m pytest tests/test_integration.py -v
 
       # 15. Cleanup
       - name: Stop Containers
