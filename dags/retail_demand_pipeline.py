@@ -15,6 +15,7 @@ default_args = {
 # Define the DAG
 with DAG(
     dag_id="retail_demand_pipeline",
+    is_paused_upon_creation=False,
     default_args=default_args,
     description="Store Item Demand Forecasting MLOps Pipeline",
     start_date=datetime(2026, 2, 2),
