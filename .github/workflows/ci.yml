@@ -42,7 +42,7 @@ jobs:
         run: |
           docker compose up -d
 
-      # 7. Wait for Airflow Health (replaces fixed timeout)
+      # 7. Wait for Airflow Health
       - name: Wait for Airflow Startup
         shell: powershell
         run: |
@@ -73,7 +73,7 @@ jobs:
 
           docker exec $container airflow dags trigger retail_demand_pipeline
 
-      # 9. Wait for DAG Completion (replaces blind timeout)
+      # 9. Wait for DAG Completion
       - name: Wait for DAG Run
         shell: powershell
         run: |
@@ -88,13 +88,20 @@ jobs:
 
             Write-Host $output
 
-            if ($output -match "success") {
+            # Get first data row after headers
+            $lines = $output -split "`n" | Where-Object { $_ -match "retail_demand_pipeline" }
+
+            $latest = $lines[0]
+
+            Write-Host "Latest Run: $latest"
+
+            if ($latest -match "success") {
               Write-Host "DAG completed successfully."
               exit 0
             }
 
-            if ($output -match "failed") {
-              Write-Error "DAG failed."
+            if ($latest -match "failed") {
+              Write-Error "Latest DAG run failed."
               exit 1
             }
 
