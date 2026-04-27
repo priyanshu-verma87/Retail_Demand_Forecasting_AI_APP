@@ -37,9 +37,10 @@ jobs:
         run: |
           python -m pytest tests/test_api.py tests/test_model_server.py -v
 
-      # 6. Start Airflow Stack
-      - name: Start Airflow
+      # 6. Reset Airflow
+      - name: Reset Airflow State
         run: |
+          docker compose down -v
           docker compose up -d
 
       # 7. Wait for Airflow Health
