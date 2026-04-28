@@ -77,10 +77,6 @@ Grafana → Dashboards
 
 ## Repository Structure
 
-```text
-.
-# Project Folder Structure
-
 ```
 
 ├── .dvc/
@@ -110,7 +106,7 @@ Grafana → Dashboards
 ├── pytest.ini
 └── requirements.txt
 
-````
+```
 
 ---
 
@@ -121,7 +117,7 @@ Grafana → Dashboards
 ```bash
 git clone <your-repo-url>
 cd <repo-folder>
-````
+```
 
 ## 2. Install Python Dependencies
 
