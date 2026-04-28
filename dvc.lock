@@ -7,14 +7,17 @@ stages:
       hash: md5
       md5: a4d98758fb830c7d073cb98a9f2b2221
       size: 144774568
+      isexec: true
     - path: params.yaml
       hash: md5
-      md5: 6282d0dfd1dff98dfe3710031dd86cfb
+      md5: a663f55cbfaebf9b2cdcebeabd59d762
       size: 681
+      isexec: true
     - path: scripts/train.py
       hash: md5
       md5: eeb9ffd20abdf118f803e1bc3a9e2e2f
       size: 7649
+      isexec: true
     params:
       params.yaml:
         general.random_state: 42
@@ -22,7 +25,7 @@ stages:
         models.linear_regression: true
         models.random_forest:
           enabled: true
-          n_estimators: 150
+          n_estimators: 120
           max_depth: 14
           n_jobs: -1
         models.xgboost:
@@ -37,12 +40,12 @@ stages:
     outs:
     - path: reports/best_model_summary.json
       hash: md5
-      md5: 7bde17866c48f11d69cbc83ec47cc7cc
-      size: 136
+      md5: ad649ec3d5c37d5a108f0daa46f85dbc
+      size: 130
     - path: reports/model_comparison.csv
       hash: md5
-      md5: 4b8669244afd7cdad634b2daa225dfc6
-      size: 355
+      md5: ec3dbc1309ff7d0799858ef5ce6c3346
+      size: 351
   predict:
     cmd: python scripts/predict.py
     deps:
@@ -50,52 +53,57 @@ stages:
       hash: md5
       md5: cdfcdd2a5d1cea4ca746390534492220
       size: 6001753
+      isexec: true
     - path: params.yaml
       hash: md5
-      md5: 6282d0dfd1dff98dfe3710031dd86cfb
+      md5: a663f55cbfaebf9b2cdcebeabd59d762
       size: 681
+      isexec: true
     - path: reports/model_comparison.csv
       hash: md5
-      md5: 4b8669244afd7cdad634b2daa225dfc6
-      size: 355
+      md5: ec3dbc1309ff7d0799858ef5ce6c3346
+      size: 351
     - path: scripts/predict.py
       hash: md5
       md5: f6b9f0d7529586813019c6625149692b
       size: 2080
+      isexec: true
     outs:
     - path: reports/predictions.csv
       hash: md5
-      md5: d9ae7aa5ad1bdba5ac9ce68cfa86b7ba
-      size: 1225576
+      md5: 5ed95ec10fbe8834422bc739d8f4171f
+      size: 1180443
   evaluate:
     cmd: python scripts/evaluate.py
     deps:
     - path: params.yaml
       hash: md5
-      md5: 6282d0dfd1dff98dfe3710031dd86cfb
+      md5: a663f55cbfaebf9b2cdcebeabd59d762
       size: 681
+      isexec: true
     - path: reports/best_model_summary.json
       hash: md5
-      md5: 7bde17866c48f11d69cbc83ec47cc7cc
-      size: 136
+      md5: ad649ec3d5c37d5a108f0daa46f85dbc
+      size: 130
     - path: reports/model_comparison.csv
       hash: md5
-      md5: 4b8669244afd7cdad634b2daa225dfc6
-      size: 355
+      md5: ec3dbc1309ff7d0799858ef5ce6c3346
+      size: 351
     - path: scripts/evaluate.py
       hash: md5
       md5: be796f677968e3e6fa3f0b84aff60359
       size: 2957
+      isexec: true
     outs:
     - path: reports/evaluation_report.txt
       hash: md5
-      md5: 0158844448c2b556140e307afbe5e3c5
-      size: 469
+      md5: c30ea23cb57ff2dae5752c2bd2921c5d
+      size: 452
     - path: reports/final_metrics.json
       hash: md5
-      md5: 82e5c2c8a836641ac2b9cb6562c0facc
-      size: 204
+      md5: 93b2e95fe9e8b2154c0a5927be839b0d
+      size: 197
     - path: reports/model_rmse_comparison.png
       hash: md5
-      md5: 8bad084dbf3e96f6bb83611218b275e7
-      size: 37232
+      md5: f20bafe1d77e2040efab24c9140017c5
+      size: 42615
