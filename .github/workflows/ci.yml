@@ -154,10 +154,3 @@ jobs:
       - name: Run Integration Tests
         run: |
           python -m pytest tests/test_integration.py -v
-
-      # 15. Cleanup
-      - name: Stop Containers
-        if: always()
-        run: |
-          docker compose down
-          docker compose -f docker-compose.deploy.yaml down
