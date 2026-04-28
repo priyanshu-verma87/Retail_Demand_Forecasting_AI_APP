@@ -24,7 +24,7 @@ models:
 
   random_forest:
     enabled: true
-    n_estimators: 150
+    n_estimators: 120
     max_depth: 14
     n_jobs: -1
 

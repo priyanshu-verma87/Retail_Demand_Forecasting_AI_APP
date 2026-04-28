@@ -117,7 +117,7 @@ jobs:
       # 10. Run DVC Training
       - name: Run Training Pipeline
         run: |
-          python -m dvc repro
+          docker compose -f docker-compose.deploy.yaml run --rm model_server python -m dvc repro
 
       # 11. Build Deployment Images
       - name: Build Deployment Stack

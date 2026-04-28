@@ -13,3 +13,4 @@ streamlit
 plotly
 pytest
 streamlit_autorefresh
+dvc
