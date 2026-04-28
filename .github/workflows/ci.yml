@@ -85,29 +85,29 @@ jobs:
 
           while ($attempt -lt $maxAttempts) {
 
-            $output = docker exec $container airflow dags list-runs -d retail_demand_pipeline --no-backfill 2>$null
+            $output = docker exec $container airflow dags list-runs `
+              -d retail_demand_pipeline --output json
 
-            Write-Host $output
+            $runs = $output | ConvertFrom-Json
 
-            # Get first data row after headers
-            $lines = $output -split "`n" | Where-Object { $_ -match "retail_demand_pipeline" }
+            $run = $runs | Where-Object { $_.dag_run_id -eq "$env:RUN_ID" }
 
-            $latest = $lines[0]
+            if ($null -ne $run) {
+              Write-Host "State: $($run.state)"
 
-            Write-Host "Latest Run: $latest"
+              if ($run.state -eq "success") {
+                Write-Host "DAG completed successfully."
+                exit 0
+              }
 
-            if ($latest -match "success") {
-              Write-Host "DAG completed successfully."
-              exit 0
-            }
-
-            if ($latest -match "failed") {
-              Write-Error "Latest DAG run failed."
-              exit 1
+              if ($run.state -eq "failed") {
+                Write-Error "DAG failed."
+                exit 1
+              }
             }
 
             Write-Host "Waiting for DAG completion..."
-            Start-Sleep -Seconds 30
+            Start-Sleep -Seconds 15
             $attempt++
           }
 
