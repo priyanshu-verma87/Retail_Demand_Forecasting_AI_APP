@@ -116,10 +116,10 @@ jobs:
           Write-Error "DAG did not finish in time."
           exit 1
 
-      # 10. Run DVC Training
+      # 10. Run Training
       - name: Run Training Pipeline
         run: |
-          docker compose -f docker-compose.deploy.yaml run --rm model_server python -m dvc repro
+          docker compose -f docker-compose.deploy.yaml run --rm model_server python -m scripts/train.py
 
       # 11. Build Deployment Images
       - name: Build Deployment Stack
