@@ -47,7 +47,7 @@ jobs:
       - name: Wait for Airflow Startup
         shell: powershell
         run: |
-          $maxAttempts = 30
+          $maxAttempts = 50
           $attempt = 0
           while ($attempt -lt $maxAttempts) {
             try {
@@ -58,7 +58,7 @@ jobs:
               }
             } catch {}
             Write-Host "Waiting for Airflow..."
-            Start-Sleep -Seconds 10
+            Start-Sleep -Seconds 15
             $attempt++
           }
           Write-Error "Airflow failed to become healthy in time."
