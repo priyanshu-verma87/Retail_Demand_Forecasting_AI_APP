@@ -64,74 +64,52 @@ jobs:
           Write-Error "Airflow failed to become healthy in time."
           exit 1
 
-      # 8. Trigger DAG — capture run_id and export to GITHUB_ENV
+      # 8. Trigger DAG
       - name: Trigger Retail Demand DAG
         shell: powershell
         run: |
           $container = docker ps --filter "name=airflow-webserver" --format "{{.Names}}"
+
           Write-Host "Using container: $container"
 
-          # Trigger and capture JSON output
-          $output = docker exec $container airflow dags trigger retail_demand_pipeline --output json
-          Write-Host "Trigger output: $output"
+          docker exec $container airflow dags trigger retail_demand_pipeline
 
-          # Parse dag_run_id from the trigger response
-          $triggerResult = $output | ConvertFrom-Json
-          $runId = $triggerResult.dag_run_id
-
-          if (-not $runId) {
-            Write-Error "Failed to capture dag_run_id from trigger output."
-            exit 1
-          }
-
-          Write-Host "Captured RUN_ID: $runId"
-
-          # Export to GitHub Actions environment so Step 9 can read it
-          echo "RUN_ID=$runId" >> $env:GITHUB_ENV
-
-      # 9. Wait for DAG Completion — uses RUN_ID exported in Step 8
+      # 9. Wait for DAG Completion
       - name: Wait for DAG Run
         shell: powershell
         run: |
           $container = docker ps --filter "name=airflow-webserver" --format "{{.Names}}"
 
-          # Fail fast if RUN_ID wasn't set in previous step
-          Write-Host "Looking for RUN_ID: '$env:RUN_ID'"
-          if (-not $env:RUN_ID) {
-            Write-Error "RUN_ID is not set! Trigger step may have failed."
-            exit 1
-          }
-
           $maxAttempts = 40
+
           $attempt = 0
 
           while ($attempt -lt $maxAttempts) {
 
-            $output = docker exec $container airflow dags list-runs `
-              -d retail_demand_pipeline --output json
+            $output = docker exec $container airflow dags list-runs -d retail_demand_pipeline --no-backfill 2>$null
 
-            $runs = $output | ConvertFrom-Json
+            Write-Host $output
 
-            $run = $runs | Where-Object { $_.dag_run_id -eq "$env:RUN_ID" }
+            # Get first data row after headers
 
-            if ($null -ne $run) {
-              Write-Host "State: $($run.state)"
+            $lines = $output -split "`n" | Where-Object { $_ -match "retail_demand_pipeline" }
 
-              if ($run.state -eq "success") {
-                Write-Host "DAG completed successfully."
-                exit 0
-              }
+            $latest = $lines[0]
 
-              if ($run.state -eq "failed") {
-                Write-Error "DAG failed."
-                exit 1
-              }
-            } else {
-              Write-Host "Run '$env:RUN_ID' not found yet in list-runs output."
+            Write-Host "Latest Run: $latest"
+
+            if ($latest -match "success") {
+              Write-Host "DAG completed successfully."
+              exit 0
+            }
+
+            if ($latest -match "failed") {
+              Write-Error "Latest DAG run failed."
+              exit 1
             }
 
             Write-Host "Waiting for DAG completion..."
-            Start-Sleep -Seconds 15
+            Start-Sleep -Seconds 30
             $attempt++
           }
 
