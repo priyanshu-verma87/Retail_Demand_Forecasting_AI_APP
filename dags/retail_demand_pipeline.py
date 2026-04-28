@@ -19,7 +19,7 @@ with DAG(
     default_args=default_args,
     description="Store Item Demand Forecasting MLOps Pipeline",
     start_date=datetime(2026, 2, 2),
-    schedule=None,
+    schedule="@daily",
     catchup=False,
     tags=["forecasting", "retail", "mlops"]
 ) as dag:
